@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Select Seats - Movie Booking{% endblock %}
+{% block content %}
+<h2>Seats for {{ showtime.movie.title }} - {{ showtime.start_time.strftime('%Y-%m-%d %H:%M') }}</h2>
+<p>Price per ticket: <strong>${{ '%.2f'|format(showtime.ticket_price) }}</strong></p>
+<form method="post" action="{{ url_for('book_tickets', showtime_id=showtime.id) }}">
+  <div class="seat-grid my-3">
+    {% for row_label, seats in rows.items() %}
+      <div class="seat-row">
+        <span class="row-label">{{ row_label }}</span>
+        {% for seat in seats %}
+          <label class="seat {{ 'booked' if seat.is_booked }}">
+            <input type="checkbox" name="seats" value="{{ seat.seat_label }}" {% if seat.is_booked %}disabled{% endif %}>
+            <span>{{ seat.seat_label }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+  <button type="submit" class="btn btn-success">Book Selected Seats</button>
+</form>
+<style>
+.seat-grid { display: flex; flex-direction: column; gap: 10px; }
+.seat-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.row-label { width: 24px; font-weight: bold; }
+.seat { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 40px; border-radius: 6px; border: 2px solid #0d6efd; cursor: pointer; user-select: none; }
+.seat input { display: none; }
+.seat span { font-size: 12px; color: #0d6efd; }
+.seat input:checked + span { color: white; }
+.seat input:checked + span, .seat:hover span { background: #0d6efd; color: white; border-radius: 3px; padding: 2px 4px; }
+.seat.booked { border-color: #6c757d; cursor: not-allowed; }
+.seat.booked span { color: #6c757d; }
+</style>
+{% endblock %}
