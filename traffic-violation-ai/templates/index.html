@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Traffic Violations</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f4f4f4; }
+        img { max-height: 120px; }
+    </style>
+    </head>
+<body>
+<h2>Recent Violations</h2>
+<p>
+    Run processing: <code>python -m app.main --input sample.mp4 --output-dir static/evidence</code>
+    — Then refresh this page.
+    Or start the server directly: <code>python -m app.main --run-dashboard</code>
+    (you can also combine both).
+    
+</p>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Vehicle No</th>
+        <th>Type</th>
+        <th>Speed (km/h)</th>
+        <th>Location</th>
+        <th>Time</th>
+        <th>Evidence</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for v in violations %}
+        <tr>
+            <td>{{ v.id }}</td>
+            <td>{{ v.vehicle_no or '-' }}</td>
+            <td>{{ v.violation_type }}</td>
+            <td>{{ '%.1f' % v.speed_kmh if v.speed_kmh else '-' }}</td>
+            <td>{{ v.location or '-' }}</td>
+            <td>{{ v.timestamp }}</td>
+            <td>
+                {% if v.evidence_path %}
+                    <a href="/evidence/{{ v.evidence_path.split('/')[-1] }}" target="_blank">
+                        <img src="/evidence/{{ v.evidence_path.split('/')[-1] }}" alt="evidence"/>
+                    </a>
+                {% else %}-{% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+</body>
+</html>
+

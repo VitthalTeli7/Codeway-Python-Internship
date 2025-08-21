@@ -1,0 +1,19 @@
+video:
+  fps: 30
+  speed_calibration_m_per_pixel: 0.05
+  red_light_roi: [
+    [100, 300],
+    [540, 300]
+  ]
+  stop_line_y: 300
+
+violations:
+  speed_limit_kmh: 60
+  parking_min_still_seconds: 60
+
+database:
+  uri: sqlite:///traffic.db
+
+dashboard:
+  host: 0.0.0.0
+  port: 5000
